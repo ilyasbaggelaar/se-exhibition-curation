@@ -3,3 +3,4 @@ dist/
 .env
 test.env
 coverage/
+.env.test
