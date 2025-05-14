@@ -9,7 +9,7 @@ const supabase = createClient(
 );
 
 const seedUsers = async () => {
-  console.log('🌱 Seeding real users via Admin API...');
+  console.log('Seeding real users via Admin API...');
 
   const users = [
     {
@@ -46,9 +46,9 @@ const seedUsers = async () => {
     });
 
     if (error) {
-      console.error(`❌ Failed to create ${user.email}:`, error.message);
+      console.error(`Failed to create ${user.email}:`, error.message);
     } else {
-      console.log(`✅ Created user: ${user.email}`);
+      console.log(`Created user: ${user.email}`);
     }
   }
 };

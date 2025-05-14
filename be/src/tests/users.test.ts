@@ -4,8 +4,6 @@ const toBeSortedBy = require('jest-sorted');
 import { expect } from "@jest/globals";
 
 
-
-// Extend Jest with the `.toBeSortedBy()` matcher
 expect.extend(toBeSortedBy);
 
 describe('GET /api/users', () => {
@@ -19,7 +17,7 @@ describe('GET /api/users', () => {
       expect(user).toEqual(
         expect.objectContaining({
           id: expect.any(String),
-          full_name: expect.anything(), // can be null
+          full_name: expect.anything(), 
           avatar_url: expect.anything(),
           created_at: expect.any(String),
         })
@@ -29,6 +27,6 @@ describe('GET /api/users', () => {
 
   it('returns users sorted by full_name', async () => {
     const res = await request(app).get('/api/users');
-    expect(res.body).toBeSortedBy('full_name'); // ascending by default
+    expect(res.body).toBeSortedBy('full_name'); 
   });
 });
