@@ -2,6 +2,7 @@ import request from 'supertest';
 import app from '../app';
 const toBeSortedBy = require('jest-sorted'); 
 import { expect } from "@jest/globals";
+import UserProfile from '../types';
 
 
 expect.extend(toBeSortedBy);
@@ -13,7 +14,9 @@ describe('GET /api/users', () => {
     expect(res.status).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
 
-    res.body.forEach((user: any) => {
+    const users: UserProfile[] = res.body;
+
+    users.forEach((user) => {
       expect(user).toEqual(
         expect.objectContaining({
           id: expect.any(String),

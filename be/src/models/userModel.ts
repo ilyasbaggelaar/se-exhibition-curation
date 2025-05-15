@@ -1,11 +1,7 @@
 import { supabase } from "../config/supabase";
+import UserProfile from "../types";
 
-export interface UserProfile {
-id: string;
-full_name: string;
-avatar_url: string;
-created_at: string;
-}
+
 
 export const fetchUsers = async (): Promise<UserProfile[]> => {
   const {data, error} = await supabase
