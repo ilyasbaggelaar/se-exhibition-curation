@@ -59,10 +59,4 @@ describe('GET /api/:user_id', () => {
 
     expect(res.status).toBe(500);
   })
-
-
-  // it('500: Responds with an error code when the ID is not a number', async () => {
-
-
-  // })
 })
