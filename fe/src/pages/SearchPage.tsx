@@ -9,10 +9,34 @@ function SearchPage() {
   const [page, setPage] = useState(1);
   const itemsPerPage = 10;
   const totalPages = Math.ceil(totalResults / itemsPerPage);
+  const maxPageButtons = 5;
+  const startPage = Math.max(1, page - Math.floor(maxPageButtons / 2));
+  const endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
+  const firstButton = startPage > 2 
+  const lastButton = endPage < totalPages - 1;
 
   const pageButtons = [];
 
-  for (let i = 1; i < totalPages; i++) {
+  if (totalPages > 1) {
+    if (startPage > 1) {
+      pageButtons.push(
+        <button
+        key={1}
+        onClick={() => setPage(1)}
+        >
+1
+        </button>
+      )
+    }
+  }
+
+  if (firstButton) {
+    pageButtons.push(<span key="start-button">...</span>)
+  }
+
+
+
+  for (let i = startPage; i <= endPage; i++) {
     pageButtons.push(
       <button
         key={i}
@@ -29,6 +53,29 @@ function SearchPage() {
         {i}
       </button>
     );
+  }
+
+  if (lastButton) {
+    pageButtons.push(<span key="end-button">...</span>)
+  }
+
+  if (endPage < totalPages) {
+    pageButtons.push(
+      <button
+      key={totalPages}
+      onClick={() => setPage(totalPages)}
+      style={{
+        margin: "0 4px",
+        padding: "4px 8px",
+        backgroundColor: page === totalPages ? "black" : "white",
+        color: page === totalPages ? "white" : "black",
+        border: "1px solid #ccc",
+        borderRadius: "4px",
+      }}
+      >
+        {totalPages}
+      </button>
+    )
   }
 
   useEffect(() => {
