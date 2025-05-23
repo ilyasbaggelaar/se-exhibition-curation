@@ -1,18 +1,15 @@
 import { use, useEffect, useState } from "react";
-import { searchMesArtworks } from "../api/mesuemApi";
+import { searchMesArtworks, searchChicagoArtworks } from "../api/mesuemApi";
 import Pagination from "../components/Pagination";
 import { useLocation } from "react-router-dom";
 
 function SearchPage() {
-
-
-
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  
+
   const categoryParam = queryParams.get("q") || "art";
   const hasImages = queryParams.has("hasImages");
-  const tags = queryParams.has("tags")
+  const tags = queryParams.has("tags");
   const [artworks, setArtworks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState(categoryParam);
@@ -21,20 +18,23 @@ function SearchPage() {
   const itemsPerPage = 10;
   const totalPages = Math.ceil(totalResults / itemsPerPage);
 
-
   useEffect(() => {
     const fetchArt = async () => {
       try {
         setLoading(true);
-        const { artworks, total } = await searchMesArtworks(
-          search,
-          page,
-          itemsPerPage,
-          {tags, hasImages,}
-        );
-        setArtworks(artworks);
-        setTotalResults(total);
+
+        const [metData, chicagoData] = await Promise.all([
+          searchMesArtworks(search, page, itemsPerPage, { tags, hasImages }),
+          searchChicagoArtworks(search, page, itemsPerPage)
+        ]);
+
+        const combined = [...metData.artworks.map(a => ({ ...a, source: 'Met'}), ...chicagoData.artworks)];
+
+        setArtworks(combined);
+        setTotalResults(metData.total + chicagoData.total);
+
         setLoading(false);
+
       } catch (err) {
         console.error(err);
       }
@@ -76,12 +76,11 @@ function SearchPage() {
               <p>{art.artistDisplayName}</p>
             </div>
           ))}
-<Pagination
-  currentPage={page}
-  totalPages={totalPages}
-  onPageChange={(p) => setPage(p)}
-/>
-
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={(p) => setPage(p)}
+          />
         </div>
       )}
     </div>
