@@ -17,6 +17,7 @@ function SearchPage() {
   const [page, setPage] = useState(1);
   const itemsPerPage = 10;
   const totalPages = Math.ceil(totalResults / itemsPerPage);
+  const [maxChicagoPages, setMaxChicagoPages] = useState(Infinity);
 
   useEffect(() => {
     const fetchArt = async () => {
@@ -28,8 +29,13 @@ function SearchPage() {
           searchChicagoArtworks(search, page, itemsPerPage)
         ]);
 
-        const combined = [...metData.artworks.map(a => ({ ...a, source: 'Met'}), ...chicagoData.artworks)];
+        const combined = [
+          ...metData.artworks.map((a) => ({ ...a, source: "Met" })),
+          ...chicagoData.artworks,
+        ];
 
+
+        setMaxChicagoPages(Math.ceil(chicagoData.total / itemsPerPage));
         setArtworks(combined);
         setTotalResults(metData.total + chicagoData.total);
 
@@ -74,6 +80,7 @@ function SearchPage() {
               )}
               <h3>{art.title}</h3>
               <p>{art.artistDisplayName}</p>
+              <p className="text-xs text-gray-500 italic">source: {art.source}</p>
             </div>
           ))}
           <Pagination
