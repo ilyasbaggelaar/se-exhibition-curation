@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { searchMesArtworks } from "../api/mesuemApi";
 import { Link } from "react-router-dom";
 
+
 const categories = [
   {
     name: "Modern Art",
@@ -20,7 +21,7 @@ export default function HomePage() {
 
   useEffect(() => {
     const fetchExploreArt = async () => {
-      const { artworks } = await searchMesArtworks("art", 1, 10);
+      const { artworks } = await searchMesArtworks("art", 1, 10, {"tags": true, "hasImages": true,});
       setExploreArt(artworks);
     };
 
@@ -35,7 +36,7 @@ export default function HomePage() {
         {categories.map((cat) => (
           <Link
             key={cat.query}
-            to={`/search?category=${cat.query}`}
+            to={`/search?q=${encodeURIComponent(cat.query)}&tags&hasImages=true`} //this is correct although it doesn't do query handling
             className="relative h-48 rounded-xl overflow-hidden shadow-lg group"
           >
             <img

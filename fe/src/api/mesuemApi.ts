@@ -1,14 +1,41 @@
 import axios from "axios";
+import qs from "qs";
 
 
 const BASE_URL = 'https://collectionapi.metmuseum.org/public/collection/v1';
 
-export const searchMesArtworks = async (query: string, page: number, limit: number): Promise<{ artworks: any[], total: number}> => {
-    const searchRes = await axios.get(`${BASE_URL}/search`, {
-        params: {q: query, hasImages: true},
-    });
+export const searchMesArtworks = async (query: string, page: number, limit: number, options?: {tags?: boolean; hasImages?: boolean}): Promise<{ artworks: any[], total: number}> => {
 
-    console.log(searchRes)
+    const baseParams: Record<string, string | boolean> = {
+        q: query,
+    }
+
+    if (options?.tags) {
+    baseParams.tags = "";
+    }
+
+    if (options?.hasImages) baseParams.hasImages = "true";
+
+    let queryString = qs.stringify(baseParams);
+
+    let count = 0;
+
+    const fixedStr = queryString.replace(/=/g, (match) => {
+        count++;
+        if (count == 2){
+            return '';
+        }
+        return match;
+    })
+
+
+    const url = `${BASE_URL}/search?${fixedStr}`
+
+    const searchRes = await axios.get(url);
+
+    console.log(url);
+    console.log(searchRes);
+
     const objectIDs = searchRes.data.objectIDs || [];
     const total = objectIDs.length;
 
@@ -21,6 +48,9 @@ export const searchMesArtworks = async (query: string, page: number, limit: numb
             const {data} = await axios.get(`${BASE_URL}/objects/${id}`);
             return data;
         } catch (err) {
+            if(axios.isAxiosError(err) && err.response?.status === 404){
+                console.warn(`object ID ${id} is not found`)
+            }
             return null;
         }
     });
