@@ -24,20 +24,25 @@ function SearchPage() {
       try {
         setLoading(true);
 
-        const [metData, chicagoData] = await Promise.all([
+        const [metData, chicagoData] = await Promise.allSettled([
           searchMesArtworks(search, page, itemsPerPage, { tags, hasImages }),
-          searchChicagoArtworks(search, page, itemsPerPage)
+          searchChicagoArtworks(search, page, itemsPerPage),
         ]);
 
+
+        const metResult = metData.status === "fulfilled" ? metData.value : {artworks: [], total: 0};
+
+        const chicagoResult = chicagoData.status === "fulfilled" ? chicagoData.value : {artworks: [], total: 0, totalPages: 0};
+
         const combined = [
-          ...metData.artworks.map((a) => ({ ...a, source: "Met" })),
-          ...chicagoData.artworks,
+          ...metResult.artworks.map((a) => ({ ...a, source: "Met" })),
+          ...chicagoResult.artworks,
         ];
 
 
-        setMaxChicagoPages(Math.ceil(chicagoData.total / itemsPerPage));
+        setMaxChicagoPages(metResult.total + chicagoResult.total);
         setArtworks(combined);
-        setTotalResults(metData.total + chicagoData.total);
+        setTotalResults(metResult.total + chicagoResult.total);
 
         setLoading(false);
 

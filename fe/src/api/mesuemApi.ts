@@ -74,6 +74,8 @@ export const searchChicagoArtworks = async (
   )}&fields=id,title,image_id,artist_title&limit=${limit}&page=${page}`;
   const response = await axios.get(url);
 
+  const total = response.data.pagination.total;
+
   const artworks = response.data.data.map((item: any) => (
     {
     objectID: `chicago-${item.id}`,
@@ -83,5 +85,5 @@ export const searchChicagoArtworks = async (
     source: `Chicago`,
     }));
 
-    return {artworks, total: response.data.pagination.total}
+    return {artworks, total}
 };
