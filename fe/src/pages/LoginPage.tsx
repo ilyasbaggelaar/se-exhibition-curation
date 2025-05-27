@@ -69,14 +69,24 @@ export default function LoginPage() {
               required
             />
             {error && <p className="text-red-400 text-sm text-center">{error}</p>}
-
+    
             <button
               type="submit"
               className="w-full bg-white text-gray-800 font-semibold py-2 rounded-full hover:bg-opacity-90 transition"
             >
               SIGN IN
             </button>
-          </form>
+
+
+          <button
+          type="button"
+          onClick={() => (window.location.href = "/signup")}
+          className="w-full bg-white text-gray-800 font-semibold py-2 rounded-full hover:bg-opacity-90 transition"
+          >
+            SIGN UP
+          </button>
+
+                    </form>
 
           <div className="flex justify-between items-center text-sm text-white/80">
             <label className="flex items-center gap-2">
