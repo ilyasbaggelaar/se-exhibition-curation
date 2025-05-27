@@ -1,14 +1,14 @@
-import { use, useState } from "react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { supabase } from "../SupabaseClient";
-import {FcGoogle} from "react-icons/fc"
+import { FcGoogle } from "react-icons/fc";
 import { FaFacebookF, FaTwitter } from "react-icons/fa";
-import ReactPlayer from "react-player"
+import ReactPlayer from "react-player";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,22 +32,22 @@ export default function LoginPage() {
 
   return (
     <div className="relative h-screen w-screen overflow-hidden">
-      {/* Video Background */}
-      <ReactPlayer
-        url="https://player.vimeo.com/video/1079634672?speed=0&pip=0&loop=1&background=1&app_id=122963"
-        playing
-        loop
-        muted
-        width="100%"
-        height="100%"
-        style={{ position: "absolute", top: 0, left: 0, zIndex: -1 }}
-      />
+<div className="absolute inset-0 z-[-1] overflow-hidden scale-[4.5] sm:scale-[3] md:scale-[3] lg:scale-[2.5] xl:scale-[1.5] transition-transform duration-500">
+  <ReactPlayer
+    url="https://player.vimeo.com/video/1079634672?speed=0&pip=0&loop=1&background=1&app_id=122963"
+    playing
+    loop
+    muted
+    width="100%"
+    height="100%"
+    className="react-player-container"
+  />
+</div>
 
-      {/* Glassmorphic Login Card */}
       <div className="flex items-center justify-center h-full px-4">
         <div className="backdrop-blur-md bg-white/10 border border-white/30 text-white rounded-2xl px-10 py-12 shadow-xl w-full max-w-md space-y-6">
           <div className="text-center space-y-1">
-            <h2 className="text-xl">Login #10</h2>
+            <h2 className="text-xl">Login</h2>
             <p className="text-sm text-white/80">Have an account?</p>
           </div>
 

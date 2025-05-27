@@ -8,4 +8,15 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-  
+
+.react-player-container > div {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.react-player-container iframe,
+.react-player-container video {
+  object-fit: cover !important;
+  width: 100% !important;
+  height: 100% !important;
+}
