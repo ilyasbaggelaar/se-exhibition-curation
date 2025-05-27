@@ -17,7 +17,7 @@ function SearchPage() {
   const [page, setPage] = useState(1);
   const itemsPerPage = 10;
   const totalPages = Math.ceil(totalResults / itemsPerPage);
-  const [maxChicagoPages, setMaxChicagoPages] = useState(Infinity);
+
 
   useEffect(() => {
     const fetchArt = async () => {
@@ -29,23 +29,38 @@ function SearchPage() {
           searchChicagoArtworks(search, page, itemsPerPage),
         ]);
 
+        const metResult =
+          metData.status === "fulfilled"
+            ? metData.value
+            : { artworks: [], total: 0 };
 
-        const metResult = metData.status === "fulfilled" ? metData.value : {artworks: [], total: 0};
+        const chicagoResult =
+          chicagoData.status === "fulfilled"
+            ? chicagoData.value
+            : { artworks: [], total: 0, totalPages: 0 };
 
-        const chicagoResult = chicagoData.status === "fulfilled" ? chicagoData.value : {artworks: [], total: 0, totalPages: 0};
+        let combined = [];
 
-        const combined = [
-          ...metResult.artworks.map((a) => ({ ...a, source: "Met" })),
-          ...chicagoResult.artworks,
-        ];
+        if (categoryParam === "Chicago") {
+          combined = [...chicagoResult.artworks];
+        } else if (categoryParam === "Met") {
+          combined = [
+            ...metResult.artworks.map((a) => ({ ...a, source: "Met" })),
+          ];
+        } else {
+          combined = [
+            ...metResult.artworks.map((a) => ({ ...a, source: "Met" })),
+            ...chicagoResult.artworks,
+          ];
+        }
+
+        console.log(combined);
 
 
-        setMaxChicagoPages(metResult.total + chicagoResult.total);
         setArtworks(combined);
         setTotalResults(metResult.total + chicagoResult.total);
 
         setLoading(false);
-
       } catch (err) {
         console.error(err);
       }
@@ -85,7 +100,9 @@ function SearchPage() {
               )}
               <h3>{art.title}</h3>
               <p>{art.artistDisplayName}</p>
-              <p className="text-xs text-gray-500 italic">source: {art.source}</p>
+              <p className="text-xs text-gray-500 italic">
+                source: {art.source}
+              </p>
             </div>
           ))}
           <Pagination
