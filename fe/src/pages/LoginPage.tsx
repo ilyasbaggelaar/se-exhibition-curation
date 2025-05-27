@@ -1,7 +1,9 @@
 import { use, useState } from "react";
+import React from "react";
 import { supabase } from "../SupabaseClient";
 import {FcGoogle} from "react-icons/fc"
 import { FaFacebookF, FaTwitter } from "react-icons/fa";
+import ReactPlayer from "react-player"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -29,63 +31,81 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500 px-4">
-      <div className="bg-white rounded-xl shadow-lg w-full max-w-md p-8 space-y-6">
-        <h2 className="text-3xl font-bold text-center">Login</h2>
+    <div className="relative h-screen w-screen overflow-hidden">
+      {/* Video Background */}
+      <ReactPlayer
+        url="https://player.vimeo.com/video/1079634672?speed=0&pip=0&loop=1&background=1&app_id=122963"
+        playing
+        loop
+        muted
+        width="100%"
+        height="100%"
+        style={{ position: "absolute", top: 0, left: 0, zIndex: -1 }}
+      />
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          <input
-            type="email"
-            placeholder="Type your email"
-            className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+      {/* Glassmorphic Login Card */}
+      <div className="flex items-center justify-center h-full px-4">
+        <div className="backdrop-blur-md bg-white/10 border border-white/30 text-white rounded-2xl px-10 py-12 shadow-xl w-full max-w-md space-y-6">
+          <div className="text-center space-y-1">
+            <h2 className="text-xl">Login #10</h2>
+            <p className="text-sm text-white/80">Have an account?</p>
+          </div>
 
-          <input
-            type="password"
-            placeholder="Type your password"
-            className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-400"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <form onSubmit={handleLogin} className="space-y-4">
+            <input
+              type="text"
+              placeholder="Username"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-2 rounded-full bg-white/20 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-white/40"
+              required
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-2 rounded-full bg-white/20 text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-white/40"
+              required
+            />
+            {error && <p className="text-red-400 text-sm text-center">{error}</p>}
 
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+            <button
+              type="submit"
+              className="w-full bg-white text-gray-800 font-semibold py-2 rounded-full hover:bg-opacity-90 transition"
+            >
+              SIGN IN
+            </button>
+          </form>
 
-          <button
-            type="submit"
-            className="w-full bg-gradient-to-r from-cyan-400 to-purple-500 text-white py-2 rounded-full font-semibold transition hover:opacity-90"
-          >
-            LOGIN
-          </button>
-        </form>
+          <div className="flex justify-between items-center text-sm text-white/80">
+            <label className="flex items-center gap-2">
+              <input type="checkbox" className="form-checkbox" />
+              Remember Me
+            </label>
+            <a href="#" className="hover:underline">
+              Forgot Password
+            </a>
+          </div>
 
-        <div className="text-center text-gray-500 text-sm">
-          Forgot password?
+          <div className="text-center text-white/70 text-sm">— Or Sign In With —</div>
+
+          <div className="flex justify-between gap-3">
+            <button className="flex-1 bg-white text-blue-600 font-medium py-2 rounded-md flex items-center justify-center gap-2">
+              <FaFacebookF /> Facebook
+            </button>
+            <button className="flex-1 bg-white text-blue-400 font-medium py-2 rounded-md flex items-center justify-center gap-2">
+              <FaTwitter /> Twitter
+            </button>
+            <button
+              onClick={handleGoogleLogin}
+              className="flex-1 bg-white text-gray-700 font-medium py-2 rounded-md flex items-center justify-center gap-2"
+            >
+              <FcGoogle className="text-xl" /> Google
+            </button>
+          </div>
         </div>
-
-        <div className="flex items-center justify-center gap-4 mt-4">
-          <button className="text-blue-600 text-xl hover:scale-110 transition">
-            <FaFacebookF />
-          </button>
-          <button className="text-blue-400 text-xl hover:scale-110 transition">
-            <FaTwitter />
-          </button>
-          <button
-            className="text-xl hover:scale-110 transition"
-            onClick={handleGoogleLogin}
-          >
-            <FcGoogle />
-          </button>
-        </div>
-
-        <p className="text-center text-gray-500 text-sm mt-6">
-          Or Sign Up Using <a href="/signup" className="text-purple-600 font-semibold">SIGN UP</a>
-        </p>
       </div>
     </div>
   );
 }
-
