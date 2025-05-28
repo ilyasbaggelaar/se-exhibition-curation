@@ -2,6 +2,8 @@ import { useState } from "react";
 import { supabase } from "../SupabaseClient";
 import ReactPlayer from "react-player";
 import { FcGoogle } from "react-icons/fc";
+import { Link } from "react-router-dom";
+import { AiOutlineHome } from "react-icons/ai";
 
 export default function SignUpPage() {
   const [email, setEmail] = useState("");
@@ -36,7 +38,13 @@ export default function SignUpPage() {
 
   return (
     <div className="relative h-screen w-screen overflow-hidden">
-      {/* Background video */}
+    <Link
+      to="/"
+      className="fixed top-4 left-4 text-gray-200 hover:text-indigo-600 transition-colors duration-300 text-3xl z-50 rounded-full p-5 shadow-md"
+      aria-label="Go to Home"
+    >
+      <AiOutlineHome />
+    </Link>
       <div className="absolute inset-0 z-[-1] overflow-hidden scale-[4.5] sm:scale-[3] md:scale-[3] lg:scale-[2.5] xl:scale-[1.5] transition-transform duration-500">
         <ReactPlayer
           url="https://player.vimeo.com/video/1079634672?speed=0&pip=0&loop=1&background=1&app_id=122963"
