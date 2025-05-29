@@ -85,7 +85,7 @@ export default function CategoryGrid() {
 			>
 				{showMore ? "Show Less" : "More Categories"}
 			</button>
-			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-16">
+			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-5">
 				{firstThree.map((cat) => (
 					<Link
 						key={cat.query}
