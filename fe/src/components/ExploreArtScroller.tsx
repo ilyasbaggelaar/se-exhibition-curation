@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { searchMesArtworks } from "../api/mesuemApi";
 import { Link } from "react-router-dom";
+import SkeletonBox from "./SkeletonBox";
 
-export default function ExploreArtScroller() {
+export default function ExploreArtScroller({loading = false}: {loading?: boolean}) {
 
     const [exploreArt, setExploreArt] = useState<any[]>([]);
   const [centerIndex, setCenterIndex] = useState<number>(0);
@@ -24,7 +25,6 @@ export default function ExploreArtScroller() {
     fetchExploreArt();
   }, []);
 
-  // Auto-scroll logic
   useEffect(() => {
     const container = scrollRef.current;
     if (!container) return;
@@ -165,11 +165,23 @@ export default function ExploreArtScroller() {
   }, []);
 
 
+  if (loading) {
+
+    return(
+          <div className="px-4">
+        <h2 className="text-3xl font-semibold text-center mb-8">Today's top picks</h2>
+        <div className="flex gap-6 overflow-x-auto no-scrollbar py-4">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <SkeletonBox key={i} className="w-64 h-80 rounded-xl" />
+          ))}
+        </div>
+      </div>
+      )
+  }
+
     return (
         <>
               
-
-      {/* EXPLORE ART SECTION */}
       <div className="text-center mb-8">
         <h2 className="text-3xl font-semibold">Today's top picks</h2>
       </div>

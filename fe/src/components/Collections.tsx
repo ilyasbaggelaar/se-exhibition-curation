@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import ReactPlayer from "react-player";
+import SkeletonBox from "./SkeletonBox";
 
 
 const collectionsOfMuseums = [
@@ -15,8 +16,21 @@ const collectionsOfMuseums = [
     }
 ]
 
-export default function Collections() {
+export default function Collections({loading = false}: {loading: boolean}) {
     
+    if (loading) {
+        return (
+                  <div className="flex flex-col items-center">
+        <h2 className="text-2xl font-bold mb-4">Explore Collections</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {Array.from({ length: 2 }).map((_, i) => (
+            <SkeletonBox key={i} className="h-48 w-full rounded-lg" />
+          ))}
+        </div>
+      </div>
+        )
+    }
+
     return (
         <div className="flex flex-col items-center">
         <h2 className="text-2xl font-bold mb-4">Explore Collections</h2>
@@ -35,7 +49,7 @@ export default function Collections() {
                     muted={true}
                     alt={collection.name}
                     width="150%"
-                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="pointer-events-none w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-4 text-white">
                     <h3 className="text-lg font-semibold">{collection.name}</h3>

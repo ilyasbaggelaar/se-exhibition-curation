@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import SkeletonBox from "../components/SkeletonBox";
 
 const categories = [
 	{
@@ -65,7 +66,20 @@ const categories = [
 	},
 ];
 
-export default function CategoryGrid() {
+export default function CategoryGrid({loading = false}: {loading?: boolean}) {
+
+	if (loading) {
+		return (
+			<>
+			        <h1 className="text-3xl font-semibold mb-6">Choose a category</h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <SkeletonBox key={i} className="h-64 w-full rounded-3xl" />
+          ))}
+        </div>
+			</>
+		)
+	}
 	const [showMore, setShowMore] = useState(false);
 
 	const sortedCategories = [...categories].sort((a, b) =>
@@ -77,7 +91,6 @@ export default function CategoryGrid() {
 
 	return (
 		<>
-			{/* CATEGORY SECTION */}
 			<h1 className="text-3xl font-semibold mb-6">Choose a category</h1>
 			<button
 				onClick={() => setShowMore((prev) => !prev)}
