@@ -3,6 +3,7 @@ import { searchMesArtworks, searchChicagoArtworks } from "../api/mesuemApi";
 import Pagination from "../components/Pagination";
 import { useLocation } from "react-router-dom";
 import SkeletonBox from "../components/SkeletonBox";
+import ArtworkPopUp from "../components/ArtworkPopUp";
 
 function SearchPage() {
   const location = useLocation();
@@ -16,6 +17,8 @@ function SearchPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState(categoryParam);
   const [totalResults, setTotalResults] = useState(0);
+  const [selectedArtwork, setSelectedArtwork] = useState<any>(null);
+  const [popUpOpen, setPopUpOpen] = useState(false);
   const [page, setPage] = useState(1);
   const itemsPerPage = 20;
   const totalPages = Math.ceil(totalResults / itemsPerPage);
@@ -108,6 +111,10 @@ function SearchPage() {
             <div
               key={art.objectID}
               className="break-inside-avoid rounded overflow-hidden shadow bg-white"
+              onClick={() => {
+                setSelectedArtwork(art);
+                setPopUpOpen(true);
+              }}
             >
               {art.primaryImageSmall ? (
                 <img
@@ -141,6 +148,12 @@ function SearchPage() {
           />
         </div>
       )}
+
+      <ArtworkPopUp
+      isOpen={popUpOpen}
+      onClose={() => setPopUpOpen(false)}
+      artwork={selectedArtwork}
+      />
     </div>
   );
 }

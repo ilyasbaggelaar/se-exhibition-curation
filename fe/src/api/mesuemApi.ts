@@ -71,7 +71,7 @@ export const searchChicagoArtworks = async (
 ): Promise<{ artworks: any[]; total: number }> => {
   const url = `https://api.artic.edu/api/v1/artworks/search?q=${encodeURIComponent(
     query
-  )}&fields=id,title,image_id,artist_title&limit=${limit}&page=${page}`;
+  )}&fields=id,title,image_id,artist_title,credit_line&limit=${limit}&page=${page}`;
   const response = await axios.get(url);
 
   const total = response.data.pagination.total;
@@ -82,6 +82,7 @@ export const searchChicagoArtworks = async (
     title: item.title,
     artistDisplayName: item.artist_title,
     primaryImageSmall: item.image_id ? `https://www.artic.edu/iiif/2/${item.image_id}/full/843,/0/default.jpg` : null,
+    creditLine: item.credit_line || "No Description Avalible.",
     source: `Chicago`,
     }));
 

@@ -12,7 +12,7 @@ export default function ExploreArtScroller({loading = false}: {loading?: boolean
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const [isHovering, setIsHovering] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [selectedArtwork, setSelectedArtowrk] = useState<any>(null);
+  const [selectedArtwork, setSelectedArtwork] = useState<any>(null);
   const [popUpOpen, setPopUpOpen] = useState(false);
 
 
@@ -222,7 +222,7 @@ export default function ExploreArtScroller({loading = false}: {loading?: boolean
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
                 onClick={() => {
-                  setSelectedArtowrk(art);
+                  setSelectedArtwork(art);
                   setPopUpOpen(true);
                 }}
               >
