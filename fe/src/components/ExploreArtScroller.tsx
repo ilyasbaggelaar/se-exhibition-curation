@@ -169,21 +169,6 @@ export default function ExploreArtScroller({loading = false}: {loading?: boolean
     return () => container.removeEventListener("wheel", handleWheel);
   }, []);
 
-
-  if (loading) {
-
-    return(
-          <div className="px-4">
-        <h2 className="text-3xl font-semibold text-center mb-8">Today's top picks</h2>
-        <div className="flex gap-6 overflow-x-auto no-scrollbar py-4">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <SkeletonBox key={i} className="w-64 h-80 rounded-xl" />
-          ))}
-        </div>
-      </div>
-      )
-  }
-
     return (
         <>
               
