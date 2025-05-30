@@ -2,14 +2,19 @@ import { useEffect, useRef, useState } from "react";
 import { searchMesArtworks } from "../api/mesuemApi";
 import { Link } from "react-router-dom";
 import SkeletonBox from "./SkeletonBox";
+import ArtworkPopUp from "./ArtworkPopUp";
+
 
 export default function ExploreArtScroller({loading = false}: {loading?: boolean}) {
 
-    const [exploreArt, setExploreArt] = useState<any[]>([]);
+  const [exploreArt, setExploreArt] = useState<any[]>([]);
   const [centerIndex, setCenterIndex] = useState<number>(0);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const [isHovering, setIsHovering] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [selectedArtwork, setSelectedArtowrk] = useState<any>(null);
+  const [popUpOpen, setPopUpOpen] = useState(false);
+
 
   useEffect(() => {
     const fetchExploreArt = async () => {
@@ -204,9 +209,8 @@ export default function ExploreArtScroller({loading = false}: {loading?: boolean
             const zIndex = isActive ? 30 : 10;
 
             return (
-              <Link
+              <div
                 key={art.objectID || index}
-                to={`/artwork/${art.objectID}`}
                 className={`art-tile relative transition-all duration-500 rounded-xl overflow-hidden shadow-xl`}
                 style={{
                   transform: `scale(${scale})`,
@@ -217,6 +221,10 @@ export default function ExploreArtScroller({loading = false}: {loading?: boolean
                 }}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
+                onClick={() => {
+                  setSelectedArtowrk(art);
+                  setPopUpOpen(true);
+                }}
               >
                 {art.primaryImageSmall ? (
                   <img
@@ -233,10 +241,16 @@ export default function ExploreArtScroller({loading = false}: {loading?: boolean
                     {art.artistDisplayName || "Unknown Artist"}
                   </div>
                 </div>
-              </Link>
+              </div>
             );
           })}
         </div>
+
+        <ArtworkPopUp
+  isOpen={popUpOpen}
+  onClose={() => setPopUpOpen(false)}
+  artwork={selectedArtwork}
+/>
       </div>
         </>
     )

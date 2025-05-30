@@ -1,7 +1,6 @@
 import CategoryGrid from "../components/CategoryGrid";
 import ExploreArtScroller from "../components/ExploreArtScroller";
 import Collections from "../components/Collections";
-import SkeletonBox from "../components/SkeletonBox";
 import { useEffect, useState } from "react";
 
 export default function HomePage() {
