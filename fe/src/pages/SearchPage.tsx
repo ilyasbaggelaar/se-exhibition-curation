@@ -110,7 +110,7 @@ function SearchPage() {
           {artworks.map((art) => (
             <div
               key={art.objectID}
-              className="break-inside-avoid rounded overflow-hidden shadow bg-white"
+              className="break-inside-avoid rounded overflow-hidden shadow bg-white transition hover:sepia-50 hover:scale-102"
               onClick={() => {
                 setSelectedArtwork(art);
                 setPopUpOpen(true);
