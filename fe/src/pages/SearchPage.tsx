@@ -39,13 +39,25 @@ function SearchPage() {
       try {
         setLoading(true);
 
+        
         const dateBegin = date.dateBegin ? parseInt(date.dateBegin, 10) : undefined;
         const dateEnd = date.dateEnd ? parseInt(date.dateEnd, 10) : undefined;
 
-        const [metData, chicagoData] = await Promise.allSettled([
-          searchMesArtworks(search, page, itemsPerPage, { tags, hasImages, GeoLocation: geoLocation || undefined, dateBegin, dateEnd}),
-          searchChicagoArtworks(search, page, itemsPerPage),
-        ]);
+      const [metData, chicagoData] = await Promise.allSettled([
+        searchMesArtworks(search, page, itemsPerPage, {
+          tags,
+          hasImages,
+          geoLocation,
+          dateBegin,
+          dateEnd,
+        }),
+        searchChicagoArtworks(search, page, itemsPerPage, {
+          hasImages,
+          geoLocation,
+          dateBegin,
+          dateEnd,
+        }),
+      ]);
 
 
         const metResult =
@@ -85,6 +97,7 @@ function SearchPage() {
   }, [search, page, hasImages, tags, geoLocation, date]);
 
   const totalPages = Math.ceil(totalResults / itemsPerPage);
+  console.log(artworks)
 
   return (
     <div className="pt-15 p-4 max-w-screen-xl mx-auto">

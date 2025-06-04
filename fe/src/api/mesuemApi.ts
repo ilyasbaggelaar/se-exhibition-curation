@@ -8,7 +8,7 @@ export const searchMesArtworks = async (
   query: string,
   page: number,
   limit: number,
-  options?: { tags?: boolean; hasImages?: boolean; GeoLocation?: string; dateBegin?: number; dateEnd?: number;}
+  options?: { tags?: boolean; hasImages?: boolean; geoLocation?: string; dateBegin?: number; dateEnd?: number;}
 ): Promise<{ artworks: any[]; total: number }> => {
   const baseParams: Record<string, string | boolean | number> = {
     q: query,
@@ -20,7 +20,7 @@ export const searchMesArtworks = async (
 
   if (options?.hasImages) baseParams.hasImages = "true";
 
-  if (options?.GeoLocation) baseParams.GeoLocation = options.GeoLocation;
+  if (options?.geoLocation) baseParams.GeoLocation = options.geoLocation;
 
   if (options?.dateBegin != null && options?.dateEnd != null){
     baseParams.dateBegin = options.dateBegin;
@@ -72,24 +72,61 @@ export const searchMesArtworks = async (
 export const searchChicagoArtworks = async (
   query: string,
   page: number,
-  limit: number
+  limit: number,
+  options?: {
+    geoLocation?: string;
+    dateBegin?: number;
+    dateEnd?: number;
+  }
 ): Promise<{ artworks: any[]; total: number }> => {
-  const url = `https://api.artic.edu/api/v1/artworks/search?q=${encodeURIComponent(
-    query
-  )}&fields=id,title,image_id,artist_title,credit_line&limit=${limit}&page=${page}`;
+  const params: Record<string, string> = {
+    q: query,
+    fields: "id,title,image_id,artist_title,credit_line,place_of_origin,date_start",
+    limit: String(limit),
+    page: String(page),
+  };
+
+  const queryString = new URLSearchParams(params).toString();
+  const url = `https://api.artic.edu/api/v1/artworks/search?${queryString}`;
   const response = await axios.get(url);
 
+  const rawData = response.data.data;
   const total = response.data.pagination.total;
 
-  const artworks = response.data.data.map((item: any) => (
-    {
+  const filteredData = rawData.filter((item: any) => {
+    let pass = true;
+
+    // Country filtering
+    if (options?.geoLocation) {
+      const origin = item.place_of_origin?.toLowerCase() || "";
+      const filterCountry = options.geoLocation.toLowerCase();
+      if (!origin.includes(filterCountry)) {
+        return false;
+      }
+    }
+
+    // Date filtering
+    if (options?.dateBegin !== undefined && options?.dateEnd !== undefined) {
+      const date = typeof item.date_start === "number" ? item.date_start : null;
+      if (date === null || date < options.dateBegin || date > options.dateEnd) {
+        return false;
+      }
+    }
+
+    return pass;
+  });
+
+  const artworks = filteredData.map((item: any) => ({
     objectID: `chicago-${item.id}`,
     title: item.title,
     artistDisplayName: item.artist_title,
-    primaryImageSmall: item.image_id ? `https://www.artic.edu/iiif/2/${item.image_id}/full/843,/0/default.jpg` : null,
-    creditLine: item.credit_line || "No Description Avalible.",
-    source: `Chicago`,
-    }));
+    primaryImageSmall: item.image_id
+      ? `https://www.artic.edu/iiif/2/${item.image_id}/full/843,/0/default.jpg`
+      : null,
+    creditLine: item.credit_line || "No Description Available.",
+    source: "Chicago",
+  }));
 
-    return {artworks, total}
+  return { artworks, total: total};
 };
+
