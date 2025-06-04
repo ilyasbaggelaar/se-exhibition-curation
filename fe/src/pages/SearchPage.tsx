@@ -5,40 +5,45 @@ import { useLocation } from "react-router-dom";
 import SkeletonBox from "../components/SkeletonBox";
 import ArtworkPopUp from "../components/ArtworkPopUp";
 import ArtworkFilter from "../components/ArtworkFilter";
+import DateRange from "../components/DateRange";
 
-
-//Have it check and ask first by which API it wants to search from
-//Potetentially update the code so it COPIES the result from the API Array
-//But preferably have it check both API's to filter through it
-//Check docu to figure out how to filter those results.
 
 function SearchPage() {
+
+  //for queries
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-
   const categoryParam = queryParams.get("q") || "art";
   const hasImages = queryParams.has("hasImages");
   const tags = queryParams.has("tags");
 
+  //for artworks
   const [artworks, setArtworks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState(categoryParam);
   const [totalResults, setTotalResults] = useState(0);
   const [selectedArtwork, setSelectedArtwork] = useState<any>(null);
   const [popUpOpen, setPopUpOpen] = useState(false);
+
+  //for pagination
   const [page, setPage] = useState(1);
   const itemsPerPage = 20;
 
+  //for filtering
   const [geoLocation, setGeoLocation] = useState("")
+  const [date, setDate] = useState({dateBegin: "", dateEnd: ""})
+
 
   useEffect(() => {
     const fetchArt = async () => {
       try {
         setLoading(true);
 
+        const dateBegin = date.dateBegin ? parseInt(date.dateBegin, 10) : undefined;
+        const dateEnd = date.dateEnd ? parseInt(date.dateEnd, 10) : undefined;
 
         const [metData, chicagoData] = await Promise.allSettled([
-          searchMesArtworks(search, page, itemsPerPage, { tags, hasImages, GeoLocation: geoLocation || undefined, }),
+          searchMesArtworks(search, page, itemsPerPage, { tags, hasImages, GeoLocation: geoLocation || undefined, dateBegin, dateEnd}),
           searchChicagoArtworks(search, page, itemsPerPage),
         ]);
 
@@ -77,13 +82,14 @@ function SearchPage() {
     };
 
     fetchArt();
-  }, [search, page, hasImages, tags, geoLocation]);
+  }, [search, page, hasImages, tags, geoLocation, date]);
 
   const totalPages = Math.ceil(totalResults / itemsPerPage);
 
   return (
     <div className="pt-15 p-4 max-w-screen-xl mx-auto">
       <ArtworkFilter geoLocation={geoLocation} onChange={setGeoLocation}/>
+      <DateRange dateBegin={date.dateBegin} dateEnd={date.dateEnd} onChange={setDate}/>
 
       <div className="mb-5 flex justify-between items-center">
         <input

@@ -8,9 +8,9 @@ export const searchMesArtworks = async (
   query: string,
   page: number,
   limit: number,
-  options?: { tags?: boolean; hasImages?: boolean; GeoLocation?: string;}
+  options?: { tags?: boolean; hasImages?: boolean; GeoLocation?: string; dateBegin?: number; dateEnd?: number;}
 ): Promise<{ artworks: any[]; total: number }> => {
-  const baseParams: Record<string, string | boolean> = {
+  const baseParams: Record<string, string | boolean | number> = {
     q: query,
   };
 
@@ -21,6 +21,11 @@ export const searchMesArtworks = async (
   if (options?.hasImages) baseParams.hasImages = "true";
 
   if (options?.GeoLocation) baseParams.GeoLocation = options.GeoLocation;
+
+  if (options?.dateBegin != null && options?.dateEnd != null){
+    baseParams.dateBegin = options.dateBegin;
+    baseParams.dateEnd = options.dateEnd;
+  }
 
   let queryString = qs.stringify(baseParams);
 
