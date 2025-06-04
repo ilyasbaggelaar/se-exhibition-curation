@@ -4,6 +4,13 @@ import Pagination from "../components/Pagination";
 import { useLocation } from "react-router-dom";
 import SkeletonBox from "../components/SkeletonBox";
 import ArtworkPopUp from "../components/ArtworkPopUp";
+import ArtworkFilter from "../components/ArtworkFilter";
+
+
+//Have it check and ask first by which API it wants to search from
+//Potetentially update the code so it COPIES the result from the API Array
+//But preferably have it check both API's to filter through it
+//Check docu to figure out how to filter those results.
 
 function SearchPage() {
   const location = useLocation();
@@ -21,7 +28,8 @@ function SearchPage() {
   const [popUpOpen, setPopUpOpen] = useState(false);
   const [page, setPage] = useState(1);
   const itemsPerPage = 20;
-  const totalPages = Math.ceil(totalResults / itemsPerPage);
+
+  const [geoLocation, setGeoLocation] = useState("")
 
   useEffect(() => {
     const fetchArt = async () => {
@@ -30,9 +38,10 @@ function SearchPage() {
 
 
         const [metData, chicagoData] = await Promise.allSettled([
-          searchMesArtworks(search, page, itemsPerPage, { tags, hasImages }),
+          searchMesArtworks(search, page, itemsPerPage, { tags, hasImages, GeoLocation: geoLocation || undefined, }),
           searchChicagoArtworks(search, page, itemsPerPage),
         ]);
+
 
         const metResult =
           metData.status === "fulfilled"
@@ -50,11 +59,11 @@ function SearchPage() {
           combined = [...chicagoResult.artworks];
         } else if (categoryParam === "Met") {
           combined = [
-            ...metResult.artworks.map((a) => ({ ...a, source: "Met" })),
+            ...metResult.artworks.map((a) => ({ ...a, source: "Met"})),
           ];
         } else {
           combined = [
-            ...metResult.artworks.map((a) => ({ ...a, source: "Met" })),
+            ...metResult.artworks.map((a) => ({ ...a, source: "Met"})),
             ...chicagoResult.artworks,
           ];
         }
@@ -68,10 +77,14 @@ function SearchPage() {
     };
 
     fetchArt();
-  }, [search, page, hasImages, tags]);
+  }, [search, page, hasImages, tags, geoLocation]);
+
+  const totalPages = Math.ceil(totalResults / itemsPerPage);
 
   return (
     <div className="pt-15 p-4 max-w-screen-xl mx-auto">
+      <ArtworkFilter geoLocation={geoLocation} onChange={setGeoLocation}/>
+
       <div className="mb-5 flex justify-between items-center">
         <input
           type="text"

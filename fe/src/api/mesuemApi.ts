@@ -3,11 +3,12 @@ import qs from "qs";
 
 const BASE_URL = "https://collectionapi.metmuseum.org/public/collection/v1";
 
+
 export const searchMesArtworks = async (
   query: string,
   page: number,
   limit: number,
-  options?: { tags?: boolean; hasImages?: boolean }
+  options?: { tags?: boolean; hasImages?: boolean; GeoLocation?: string;}
 ): Promise<{ artworks: any[]; total: number }> => {
   const baseParams: Record<string, string | boolean> = {
     q: query,
@@ -18,6 +19,8 @@ export const searchMesArtworks = async (
   }
 
   if (options?.hasImages) baseParams.hasImages = "true";
+
+  if (options?.GeoLocation) baseParams.GeoLocation = options.GeoLocation;
 
   let queryString = qs.stringify(baseParams);
 
@@ -34,9 +37,6 @@ export const searchMesArtworks = async (
   const url = `${BASE_URL}/search?${fixedStr}`;
 
   const searchRes = await axios.get(url);
-
-  console.log(url);
-  console.log(searchRes);
 
   const objectIDs = searchRes.data.objectIDs || [];
   const total = objectIDs.length;
