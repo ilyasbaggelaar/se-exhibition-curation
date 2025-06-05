@@ -101,7 +101,7 @@ function SearchPage() {
 
   return (
     <div className="pt-15 p-4 max-w-screen-xl mx-auto">
-      <ArtworkFilter geoLocation={geoLocation} onChange={setGeoLocation}/>
+      <ArtworkFilter geoLocation={geoLocation} onChange={setGeoLocation} onPage={setPage}/>
       <DateRange dateBegin={date.dateBegin} dateEnd={date.dateEnd} onChange={setDate}/>
 
       <div className="mb-5 flex justify-between items-center">

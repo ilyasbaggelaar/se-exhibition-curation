@@ -81,6 +81,7 @@ export const searchChicagoArtworks = async (
 ): Promise<{ artworks: any[]; total: number }> => {
   const params: Record<string, string> = {
     q: query,
+    //place_of_origin and date_start are the queries needed, geoLocation, dateBegin&End doesn't work the same on this API.
     fields: "id,title,image_id,artist_title,credit_line,place_of_origin,date_start",
     limit: String(limit),
     page: String(page),

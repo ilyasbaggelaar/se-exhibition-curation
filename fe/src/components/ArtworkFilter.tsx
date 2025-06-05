@@ -3,6 +3,7 @@ import type { ChangeEvent } from "react";
 interface ArtworkFilterProps {
   geoLocation: string;
   onChange: (value: string) => void;
+  onPage: (page: number) => void;
 }
 
 const COUNTRIES = [
@@ -26,9 +27,11 @@ const COUNTRIES = [
 export default function ArtworkFilter({
   geoLocation,
   onChange,
+  onPage,
 }: ArtworkFilterProps) {
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     onChange(e.target.value);
+      onPage(1)
   };
 
   return (
