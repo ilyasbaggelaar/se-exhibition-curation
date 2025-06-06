@@ -31,32 +31,33 @@ export default function Collections({loading = false}: {loading: boolean}) {
         )
     }
 
-    return (
-        <div className="flex flex-col items-center">
-        <h2 className="text-2xl font-bold mb-4">Explore Collections</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {collectionsOfMuseums.map((collection) => (
-            <Link
-                key={collection.query}
-                to={`/search?q=${collection.query}`}
-                className="group relative block overflow-hidden rounded-lg shadow-lg"
-                state={{ museumKey: collection.query }}
-            >
-                <ReactPlayer
-                    url={collection.image}
-                    playing={true}
-                    loop={true}
-                    muted={true}
-                    alt={collection.name}
-                    width="150%"
-                    className="pointer-events-none w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-4 text-white">
-                    <h3 className="text-lg font-semibold">{collection.name}</h3>
-                </div>
-            </Link>
-            ))}
-        </div>
-        </div>
-    );
+ return (
+  <div className="flex flex-col items-center w-full">
+    <h2 className="text-2xl sm:text-3xl font-bold mb-6">Explore Collections</h2>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full">
+      {collectionsOfMuseums.map((collection) => (
+        <Link
+          key={collection.query}
+          to={`/search?q=${collection.query}`}
+          state={{ museumKey: collection.query }}
+          className="group relative block rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all"
+        >
+          <ReactPlayer
+            url={collection.image}
+            playing={true}
+            loop={true}
+            muted={true}
+            width="100%"
+            height="100%"
+            className="pointer-events-none aspect-video object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+          <div className="absolute bottom-0 left-0 right-0 bg-black/60 p-4 text-white">
+            <h3 className="text-lg sm:text-xl font-semibold">{collection.name}</h3>
+          </div>
+        </Link>
+      ))}
+    </div>
+  </div>
+);
+
 }

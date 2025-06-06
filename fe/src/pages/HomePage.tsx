@@ -16,7 +16,7 @@ export default function HomePage() {
   }, [])
   
   return (
-    <div className="max-w-[90rem] mx-auto px-6 py-12 space-y-20">
+    <div className="max-w-[90rem] mx-auto px-4 sm:px-6 py-10 sm:py-16 space-y-24">
       <CategoryGrid loading={loading}/>
       <ExploreArtScroller loading={loading}/>
       <Collections loading={loading}/>

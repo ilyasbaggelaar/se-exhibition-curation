@@ -1,11 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { searchMesArtworks } from "../api/mesuemApi";
-import { Link } from "react-router-dom";
-import SkeletonBox from "./SkeletonBox";
 import ArtworkPopUp from "./ArtworkPopUp";
 
 
-export default function ExploreArtScroller({loading = false}: {loading?: boolean}) {
+export default function ExploreArtScroller() {
 
   const [exploreArt, setExploreArt] = useState<any[]>([]);
   const [centerIndex, setCenterIndex] = useState<number>(0);

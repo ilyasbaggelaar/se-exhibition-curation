@@ -90,62 +90,57 @@ export default function CategoryGrid({loading = false}: {loading?: boolean}) {
 	const rest = sortedCategories.slice(3);
 
 	return (
-		<>
-			<h1 className="text-3xl font-semibold mb-6">Choose a category</h1>
-			<button
-				onClick={() => setShowMore((prev) => !prev)}
-				className="mb-6 px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition"
-			>
-				{showMore ? "Show Less" : "More Categories"}
-			</button>
-			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-5">
-				{firstThree.map((cat) => (
-					<Link
-						key={cat.query}
-						to={`/search?q=${encodeURIComponent(
-							cat.query
-						)}&tags&hasImages=true`}
-						className="relative group rounded-3xl overflow-hidden shadow-lg transition-transform hover:scale-[1.02] duration-300"
-					>
-						<img
-							src={cat.image}
-							alt={cat.name}
-							className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
-						/>
-						<div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-						<div className="absolute bottom-6 left-6">
-							<h2 className="text-white text-3xl font-semibold drop-shadow-xl">
-								{cat.name}
-							</h2>
-						</div>
-					</Link>
-				))}
-			</div>
+  <>
+    <h1 className="text-2xl sm:text-3xl font-semibold mb-6">Choose a category</h1>
+    <button
+      onClick={() => setShowMore((prev) => !prev)}
+      className="mb-6 px-4 py-2 bg-black text-white rounded-full hover:bg-gray-900 transition"
+    >
+      {showMore ? "Show Less" : "More Categories"}
+    </button>
 
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-5">
+      {firstThree.map((cat) => (
+        <Link
+          key={cat.query}
+          to={`/search?q=${encodeURIComponent(cat.query)}&tags&hasImages=true`}
+          className="relative group rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-transform hover:scale-[1.03]"
+        >
+          <img
+            src={cat.image}
+            alt={cat.name}
+            className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+          <div className="absolute bottom-6 left-6">
+            <h2 className="text-white text-xl sm:text-2xl font-semibold drop-shadow-lg">{cat.name}</h2>
+          </div>
+        </Link>
+      ))}
+    </div>
 
-			{showMore && (
-				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-					{rest.map((cat) => (
-						<Link
-							key={cat.query}
-							to={`/search?q=${encodeURIComponent(cat.query)}&tags&hasImages=true`}
-							className="relative group rounded-3xl overflow-hidden shadow-lg transition-transform hover:scale-[1.02] duration-300"
-						>
-							<img
-								src={cat.image}
-								alt={cat.name}
-								className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
-							/>
-							<div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-							<div className="absolute bottom-6 left-6">
-								<h2 className="text-white text-3xl font-semibold drop-shadow-xl">
-									{cat.name}
-								</h2>
-							</div>
-						</Link>
-					))}
-				</div>
-			)}
-		</>
-	);
+    {showMore && (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {rest.map((cat) => (
+          <Link
+            key={cat.query}
+            to={`/search?q=${encodeURIComponent(cat.query)}&tags&hasImages=true`}
+            className="relative group rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-transform hover:scale-[1.03]"
+          >
+            <img
+              src={cat.image}
+              alt={cat.name}
+              className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+            <div className="absolute bottom-6 left-6">
+              <h2 className="text-white text-xl sm:text-2xl font-semibold drop-shadow-lg">{cat.name}</h2>
+            </div>
+          </Link>
+        ))}
+      </div>
+    )}
+  </>
+);
+
 }
