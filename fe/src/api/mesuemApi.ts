@@ -22,10 +22,13 @@ export const searchMesArtworks = async (
 
   if (options?.geoLocation) baseParams.GeoLocation = options.geoLocation;
 
-  if (options?.dateBegin != null && options?.dateEnd != null){
-    baseParams.dateBegin = options.dateBegin;
-    baseParams.dateEnd = options.dateEnd;
-  }
+if (
+  typeof options?.dateBegin === "number" &&
+  typeof options?.dateEnd === "number"
+) {
+  baseParams.dateBegin = options.dateBegin;
+  baseParams.dateEnd = options.dateEnd;
+}
 
   let queryString = qs.stringify(baseParams);
 
@@ -44,7 +47,6 @@ export const searchMesArtworks = async (
   const searchRes = await axios.get(url);
 
   const objectIDs = searchRes.data.objectIDs || [];
-  const total = objectIDs.length;
 
   const start = (page - 1) * limit;
 
@@ -66,7 +68,7 @@ export const searchMesArtworks = async (
 
   const artworks = results.filter(Boolean);
 
-  return { artworks, total };
+  return { artworks, total: artworks.length };
 };
 
 export const searchChicagoArtworks = async (

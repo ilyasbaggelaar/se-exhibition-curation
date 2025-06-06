@@ -14,8 +14,10 @@ function SearchPage() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const categoryParam = queryParams.get("q") || "art";
-  const hasImages = queryParams.has("hasImages");
-  const tags = queryParams.has("tags");
+const hasImages = queryParams.has("hasImages") || location.pathname === "/search";
+const tags = queryParams.has("tags") || location.pathname === "/search";
+
+
 
   //for artworks
   const [artworks, setArtworks] = useState<any[]>([]);
