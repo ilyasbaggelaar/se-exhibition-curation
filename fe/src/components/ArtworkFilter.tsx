@@ -31,16 +31,18 @@ export default function ArtworkFilter({
 }: ArtworkFilterProps) {
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     onChange(e.target.value);
-      onPage(1)
+    onPage(1);
   };
 
   return (
-    <div className="mb-4 max-w-xs">
-      <label className="block mb-1 font-medium text-sm">Filter by Country (GeoLocation)</label>
+    <div className="mb-6 max-w-xs">
+      <label className="block mb-2 text-sm font-semibold text-gray-700">
+        Filter by Country
+      </label>
       <select
         value={geoLocation}
         onChange={handleChange}
-        className="border p-2 rounded w-full"
+        className="w-full rounded-2xl border border-gray-300 bg-white px-4 py-2 text-sm text-gray-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 transition-all"
       >
         {COUNTRIES.map((country) => (
           <option key={country} value={country}>
