@@ -1,5 +1,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { supabase } from '../SupabaseClient';
+
 
 interface ArtworkPopUpProp {
   isOpen: boolean;
@@ -7,12 +9,45 @@ interface ArtworkPopUpProp {
   artwork: any;
 }
 
+
+
 const ArtworkPopUp: React.FC<ArtworkPopUpProp> = ({
   isOpen,
   onClose,
   artwork,
 }) => {
   if (!artwork) return null;
+
+const handleSaveArtwork = async () => {
+  const {
+    data: { user },
+    error: userError
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    alert("You must be logged in to save artwork.");
+    return;
+  }
+
+  const { error } = await supabase.from("saved_artworks").insert([
+    {
+      user_id: user.id,
+      artwork_id: artwork.id?.toString() || "", // use ID from API
+      title: artwork.title || "Untitled",
+      image_url: artwork.primaryImageSmall || "",
+      artist_title: artwork.artistDisplayName || "Unknown",
+    }
+  ]);
+
+  if (error) {
+    console.error("Save failed:", error);
+    alert("Failed to save artwork.");
+  } else {
+    alert("Artwork saved to your account!");
+  }
+};
+
+
 
   return (
     <AnimatePresence>
@@ -44,6 +79,12 @@ const ArtworkPopUp: React.FC<ArtworkPopUpProp> = ({
               >
                 Close
               </button>
+                                        <button
+  className="mt-4 px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700"
+  onClick={handleSaveArtwork}
+>
+  Save Artwork to Account
+</button>
             </div>
 
             {/* Image */}
@@ -57,7 +98,11 @@ const ArtworkPopUp: React.FC<ArtworkPopUpProp> = ({
               ) : (
                 <div className="w-full h-full bg-gray-300" />
               )}
+
             </div>
+
+
+
           </motion.div>
         </motion.div>
       )}
