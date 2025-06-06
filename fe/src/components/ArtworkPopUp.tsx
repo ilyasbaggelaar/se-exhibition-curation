@@ -36,6 +36,7 @@ const handleSaveArtwork = async () => {
       title: artwork.title || "Untitled",
       image_url: artwork.primaryImageSmall || "",
       artist_title: artwork.artistDisplayName || "Unknown",
+      description: artwork.creditLine || "No Description Available."
     }
   ]);
 
