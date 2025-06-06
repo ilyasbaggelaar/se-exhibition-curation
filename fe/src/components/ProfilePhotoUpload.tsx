@@ -1,10 +1,32 @@
 import { useState, useRef } from "react";
 import { supabase } from "../SupabaseClient";
+import { useEffect } from "react";
 
 export default function ProfilePhotoUploader({ user, onUpload }: { user: any; onUpload?: () => void }) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [uploading, setUploading] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(user?.user_metadata?.avatar_url || null);
+
+
+    useEffect(() => {
+    if (!user) return;
+
+    async function fetchProfile() {
+      const { data: profile, error } = await supabase
+        .from("profiles")
+        .select("avatar_url")
+        .eq("id", user.id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching profile:", error.message);
+      } else if (profile?.avatar_url) {
+        setAvatarUrl(profile.avatar_url);
+      }
+    }
+
+    fetchProfile();
+  }, [user]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -12,8 +34,6 @@ export default function ProfilePhotoUploader({ user, onUpload }: { user: any; on
 
     const fileExt = file.name.split(".").pop();
  const filePath = `avatars/${user.id}.${fileExt}`;
-
-   console.log(filePath)
 
 
     setUploading(true);
@@ -30,6 +50,8 @@ export default function ProfilePhotoUploader({ user, onUpload }: { user: any; on
 
     const { data: urlData } = supabase.storage.from("avatars").getPublicUrl(filePath);
     const publicUrl = urlData.publicUrl;
+
+    console.log(publicUrl)
 
     const { error: updateError } = await supabase
       .from("profiles")
