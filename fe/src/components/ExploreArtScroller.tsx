@@ -199,8 +199,8 @@ export default function ExploreArtScroller() {
                   transform: `scale(${scale})`,
                   filter: brightness,
                   zIndex,
-                  width: "16rem",
-                  height: "22rem",
+                  width: "16.2rem",
+                  height: "25.5rem",
                 }}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}

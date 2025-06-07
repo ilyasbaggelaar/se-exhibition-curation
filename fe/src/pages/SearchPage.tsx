@@ -54,7 +54,7 @@ const tags = queryParams.has("tags") || location.pathname === "/search";
           dateEnd,
         }),
         searchChicagoArtworks(search, page, itemsPerPage, {
-          hasImages,
+          //fix hasImages on chicagoArtworks?,
           geoLocation,
           dateBegin,
           dateEnd,
