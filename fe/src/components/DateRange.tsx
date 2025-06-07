@@ -4,6 +4,7 @@ interface DateRangeProps {
   dateBegin: string;
   dateEnd: string;
   onChange: (dates: { dateBegin: string; dateEnd: string }) => void;
+  onPage: (page: number) => void;
 }
 
 const ERA_OPTIONS = [
@@ -18,7 +19,7 @@ const ERA_OPTIONS = [
   { label: "8000 - 2000 B.C.", value: { dateBegin: "-8000", dateEnd: "-2000" } },
 ];
 
-export default function DateRange({ dateBegin, dateEnd, onChange }: DateRangeProps) {
+export default function DateRange({ dateBegin, dateEnd, onChange, onPage }: DateRangeProps) {
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const selected = ERA_OPTIONS.find(
       (opt) =>
@@ -26,6 +27,7 @@ export default function DateRange({ dateBegin, dateEnd, onChange }: DateRangePro
     );
     if (selected) {
       onChange(selected.value);
+      onPage(1)
     }
   };
 

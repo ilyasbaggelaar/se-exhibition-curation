@@ -105,7 +105,7 @@ const tags = queryParams.has("tags") || location.pathname === "/search";
   <div className="pt-16 p-4 max-w-screen-xl mx-auto">
     <div className="mb-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-end">
       <ArtworkFilter geoLocation={geoLocation} onChange={setGeoLocation} onPage={setPage} />
-      <DateRange dateBegin={date.dateBegin} dateEnd={date.dateEnd} onChange={setDate} />
+      <DateRange dateBegin={date.dateBegin} dateEnd={date.dateEnd} onChange={setDate} onPage={setPage}/>
       <div className="flex flex-col w-full max-w-xs">
         <label className="block mb-1 text-sm font-medium text-gray-700">Search Artworks</label>
         <input
