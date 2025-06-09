@@ -30,12 +30,12 @@ export default function ProfilePage() {
   const [selectedArtwork, setSelectedArtwork] = useState<SavedArtwork | null>(null);
   const [popUpOpen, setPopUpOpen] = useState(false);
 
-  // Username editing state
+
   const [username, setUsername] = useState<string>("");
   const [editingUsername, setEditingUsername] = useState(false);
   const usernameInputRef = useRef<HTMLInputElement>(null);
 
-  // Helper: localStorage key based on user ID or email
+  //localStorage key based on user ID or email
   const getUsernameStorageKey = () =>
     user ? `profile_username_${user.id || user.email}` : null;
 

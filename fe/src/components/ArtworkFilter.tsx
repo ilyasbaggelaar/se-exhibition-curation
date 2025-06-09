@@ -22,6 +22,7 @@ const COUNTRIES = [
   "Korea",
   "Iran",
   "Turkey",
+  "Netherlands"
 ];
 
 export default function ArtworkFilter({

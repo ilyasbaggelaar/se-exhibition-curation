@@ -18,9 +18,11 @@ export const searchMesArtworks = async (
     baseParams.tags = "";
   }
 
+  if (options?.geoLocation) baseParams.geoLocation = options.geoLocation;
+
   if (options?.hasImages) baseParams.hasImages = "true";
 
-  if (options?.geoLocation) baseParams.GeoLocation = options.geoLocation;
+
 
 if (
   typeof options?.dateBegin === "number" &&
@@ -31,6 +33,8 @@ if (
 }
 
   let queryString = qs.stringify(baseParams);
+
+ 
 
   let count = 0;
 
@@ -67,8 +71,8 @@ if (
   const results = await Promise.all(promises);
 
   const artworks = results.filter(Boolean);
+return { artworks, total: searchRes.data.total || 0 };
 
-  return { artworks, total: artworks.length };
 };
 
 export const searchChicagoArtworks = async (
@@ -93,43 +97,40 @@ export const searchChicagoArtworks = async (
   const url = `https://api.artic.edu/api/v1/artworks/search?${queryString}`;
   const response = await axios.get(url);
 
+  console.log(response.data.data)
   const rawData = response.data.data;
-  const total = response.data.pagination.total;
 
-  const filteredData = rawData.filter((item: any) => {
-    let pass = true;
+const filteredData = rawData.filter((item: any) => {
+  let pass = true;
 
-    // Country filtering
-    if (options?.geoLocation) {
-      const origin = item.place_of_origin?.toLowerCase() || "";
-      const filterCountry = options.geoLocation.toLowerCase();
-      if (!origin.includes(filterCountry)) {
-        return false;
-      }
+  if (options?.geoLocation) {
+    const origin = item.place_of_origin?.toLowerCase() || "";
+    const filterCountry = options.geoLocation.toLowerCase();
+    if (!origin.includes(filterCountry)) {
+      return false;
     }
+  }
 
-    // Date filtering
-    if (options?.dateBegin !== undefined && options?.dateEnd !== undefined) {
-      const date = typeof item.date_start === "number" ? item.date_start : null;
-      if (date === null || date < options.dateBegin || date > options.dateEnd) {
-        return false;
-      }
+  if (options?.dateBegin !== undefined && options?.dateEnd !== undefined) {
+    const date = typeof item.date_start === "number" ? item.date_start : null;
+    if (date === null || date < options.dateBegin || date > options.dateEnd) {
+      return false;
     }
+  }
 
-    return pass;
-  });
+  return pass;
+});
 
-  const artworks = filteredData.map((item: any) => ({
-    objectID: `chicago-${item.id}`,
-    title: item.title,
-    artistDisplayName: item.artist_title,
-    primaryImageSmall: item.image_id
-      ? `https://www.artic.edu/iiif/2/${item.image_id}/full/843,/0/default.jpg`
-      : null,
-    creditLine: item.credit_line || "No Description Available.",
-    source: "Chicago",
-  }));
+const artworks = filteredData.map((item: any) => ({
+  objectID: `chicago-${item.id}`,
+  title: item.title,
+  artistDisplayName: item.artist_title,
+  primaryImageSmall: item.image_id
+    ? `https://www.artic.edu/iiif/2/${item.image_id}/full/843,/0/default.jpg`
+    : null,
+  creditLine: item.credit_line || "No Description Available.",
+  source: "Chicago",
+}));
 
-  return { artworks, total: total};
-};
-
+return { artworks, total: filteredData.length };
+}
