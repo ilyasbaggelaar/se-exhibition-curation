@@ -92,15 +92,6 @@ export default function ProfilePage() {
       })
     : "Unknown";
     
-  const getInitials = (name: string) => {
-    if (!name) return "U";
-    const parts = name.split(/[\.\-_ ]+/);
-    const initials = parts
-      .map((p) => p.charAt(0).toUpperCase())
-      .slice(0, 2)
-      .join("");
-    return initials;
-  };
 
   const startEditingUsername = () => {
     setEditingUsername(true);
