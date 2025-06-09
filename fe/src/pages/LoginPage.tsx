@@ -110,12 +110,6 @@ export default function LoginPage() {
           <div className="text-center text-white/70 text-sm">— Or Sign In With —</div>
 
           <div className="flex justify-between gap-3">
-            <button className="flex-1 bg-white text-blue-600 font-medium py-2 rounded-md flex items-center justify-center gap-2">
-              <FaFacebookF /> Facebook
-            </button>
-            <button className="flex-1 bg-white text-blue-400 font-medium py-2 rounded-md flex items-center justify-center gap-2">
-              <FaTwitter /> Twitter
-            </button>
             <button
               onClick={handleGoogleLogin}
               className="flex-1 bg-white text-gray-700 font-medium py-2 rounded-md flex items-center justify-center gap-2"
