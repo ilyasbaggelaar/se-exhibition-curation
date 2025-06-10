@@ -44,7 +44,7 @@ const Pagination: React.FC<PaginationProps> = ({
         pageButtons.push(
           <button
             key={i}
-            onClick={() => onPageChange(i)}
+            onClick={() => onPageChange(i - 1)}
             style={buttonStyle(i === currentPage)}
           >
             {i}
@@ -56,18 +56,6 @@ const Pagination: React.FC<PaginationProps> = ({
         pageButtons.push(<span key="end-button">...</span>)
       }
     
-      if (endPage < totalPages) {
-        pageButtons.push(
-          <button
-          key={totalPages}
-          onClick={() => onPageChange(totalPages)}
-          style={buttonStyle(totalPages === currentPage)}
-          >
-            {totalPages}
-          </button>
-        )
-      }
-
 
       return (
         <div style={{ marginTop: "1rem" }}>

@@ -11,7 +11,7 @@ function SearchPage() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const categoryParam = queryParams.get("q") || "art";
-  const hasImages = queryParams.has("hasImages") || location.pathname === "/search";
+ const hasImages = queryParams.has("hasImages") || location.pathname === "/search";
   const tags = queryParams.has("tags") || location.pathname === "/search";
 
   const [artworks, setArtworks] = useState<any[]>([]);
@@ -52,23 +52,25 @@ function SearchPage() {
         const metResult = metData.status === "fulfilled" ? metData.value : { artworks: [], total: 0 };
         const chicagoResult = chicagoData.status === "fulfilled" ? chicagoData.value : { artworks: [], total: 0 };
 
+let combined = [];
+let total = 0;
 
-        let combined = [];
-        let total = 0;
+if (categoryParam === "Chicago") {
+  combined = [...chicagoResult.artworks];
+  total = chicagoResult.artworks.length;
+} else if (categoryParam === "Met") {
+  combined = [...metResult.artworks.map((a) => ({ ...a, source: "Met" }))];
+  total = metResult.total;
+} else {
+  combined = [
+    ...metResult.artworks.map((a) => ({ ...a, source: "Met" })),
+    ...chicagoResult.artworks,
+  ];
 
-        if (categoryParam === "Chicago") {
-          combined = [...chicagoResult.artworks];
-          total = chicagoResult.total;
-        } else if (categoryParam === "Met") {
-          combined = [...metResult.artworks.map((a) => ({ ...a, source: "Met" }))];
-          total = metResult.total;
-        } else {
-          combined = [
-            ...metResult.artworks.map((a) => ({ ...a, source: "Met" })),
-            ...chicagoResult.artworks,
-          ];
-          total = metResult.total + chicagoResult.total;
-        }
+  // Only count Chicago results on page 1, to avoid inflating totals
+  total = metResult.total + (page === 1 ? chicagoResult.artworks.length : 0);
+}
+
 
         setArtworks(combined);
         setTotalResults(total);
@@ -81,6 +83,8 @@ function SearchPage() {
     fetchArt();
   }, [search, page, hasImages, tags, geoLocation, date, categoryParam]);
 
+
+  
   const totalPages = Math.ceil(totalResults / itemsPerPage);
 
   return (
@@ -93,7 +97,7 @@ function SearchPage() {
           <input
             type="text"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {setSearch(e.target.value); setPage(1);}}
             placeholder="e.g., Van Gogh"
             className="border border-gray-300 rounded-2xl px-4 py-2 text-sm shadow-sm focus:ring-2 focus:ring-indigo-200 focus:outline-none"
           />

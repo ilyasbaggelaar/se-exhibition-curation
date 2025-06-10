@@ -48,6 +48,8 @@ if (
 
   const url = `${BASE_URL}/search?${fixedStr}`;
 
+
+
   const searchRes = await axios.get(url);
 
   const objectIDs = searchRes.data.objectIDs || [];
@@ -95,6 +97,7 @@ export const searchChicagoArtworks = async (
 
   const queryString = new URLSearchParams(params).toString();
   const url = `https://api.artic.edu/api/v1/artworks/search?${queryString}`;
+  console.log(url)
   const response = await axios.get(url);
 
   console.log(response.data.data)
