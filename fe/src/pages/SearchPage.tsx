@@ -21,8 +21,8 @@ function SearchPage() {
   const pageParam = parseInt(queryParams.get("page") || "1", 10);
 
   const [search, setSearch] = useState(categoryParam);
-  const [hasImages, setHasImages] = useState(hasImagesParam);
-  const [tags, setTags] = useState(tagsParam);
+  const [hasImages] = useState(hasImagesParam);
+  const [tags] = useState(tagsParam);
   const [geoLocation, setGeoLocation] = useState(geoLocationParam);
   const [date, setDate] = useState({ dateBegin: dateBeginParam, dateEnd: dateEndParam });
   const [page, setPage] = useState(pageParam);
