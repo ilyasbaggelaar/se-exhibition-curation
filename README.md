@@ -57,8 +57,9 @@ If all keys are present, it will output "success".
 npx tsx scripts/seed-db.ts
 
 testUser login information:
-email: exampleemail@gmail.com
+email: testemail123@gmail.com
 Password: test012
+
 
 
 ### 6. START THE APP!
