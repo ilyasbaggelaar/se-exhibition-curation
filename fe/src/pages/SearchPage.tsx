@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { searchMesArtworks, searchChicagoArtworks } from "../api/mesuemApi";
 import Pagination from "../components/Pagination";
-import { useLocation } from "react-router-dom";
 import SkeletonBox from "../components/SkeletonBox";
 import ArtworkPopUp from "../components/ArtworkPopUp";
 import ArtworkFilter from "../components/ArtworkFilter";
@@ -9,23 +9,48 @@ import DateRange from "../components/DateRange";
 
 function SearchPage() {
   const location = useLocation();
+  const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
+
   const categoryParam = queryParams.get("q") || "art";
-const hasImages = queryParams.get("hasImages") === "true";
-const tags = queryParams.get("tags") === "true";
+  const hasImagesParam = queryParams.get("hasImages") === "true";
+  const tagsParam = queryParams.get("tags") === "true";
+  const geoLocationParam = queryParams.get("geoLocation") || "";
+  const dateBeginParam = queryParams.get("dateBegin") || "";
+  const dateEndParam = queryParams.get("dateEnd") || "";
+  const pageParam = parseInt(queryParams.get("page") || "1", 10);
+
+  const [search, setSearch] = useState(categoryParam);
+  const [hasImages, setHasImages] = useState(hasImagesParam);
+  const [tags, setTags] = useState(tagsParam);
+  const [geoLocation, setGeoLocation] = useState(geoLocationParam);
+  const [date, setDate] = useState({ dateBegin: dateBeginParam, dateEnd: dateEndParam });
+  const [page, setPage] = useState(pageParam);
 
   const [artworks, setArtworks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState(categoryParam);
   const [totalResults, setTotalResults] = useState(0);
   const [selectedArtwork, setSelectedArtwork] = useState<any>(null);
   const [popUpOpen, setPopUpOpen] = useState(false);
-  const [page, setPage] = useState(1);
+
   const itemsPerPage = 20;
 
-  const [geoLocation, setGeoLocation] = useState("");
-  const [date, setDate] = useState({ dateBegin: "", dateEnd: "" });
+  // Sync URL with state
+  useEffect(() => {
+    const params = new URLSearchParams();
 
+    if (search) params.set("q", search);
+    if (hasImages) params.set("hasImages", "true");
+    if (tags) params.set("tags", "true");
+    if (geoLocation) params.set("geoLocation", geoLocation);
+    if (date.dateBegin) params.set("dateBegin", date.dateBegin);
+    if (date.dateEnd) params.set("dateEnd", date.dateEnd);
+    if (page !== 1) params.set("page", String(page));
+
+    navigate({ search: params.toString() }, { replace: true });
+  }, [search, hasImages, tags, geoLocation, date, page, navigate]);
+
+  // Fetch data
   useEffect(() => {
     const fetchArt = async () => {
       try {
@@ -52,25 +77,22 @@ const tags = queryParams.get("tags") === "true";
         const metResult = metData.status === "fulfilled" ? metData.value : { artworks: [], total: 0 };
         const chicagoResult = chicagoData.status === "fulfilled" ? chicagoData.value : { artworks: [], total: 0 };
 
-let combined = [];
-let total = 0;
+        let combined = [];
+        let total = 0;
 
-if (categoryParam === "Chicago") {
-  combined = [...chicagoResult.artworks];
-  total = chicagoResult.artworks.length;
-} else if (categoryParam === "Met") {
-  combined = [...metResult.artworks.map((a) => ({ ...a, source: "Met" }))];
-  total = metResult.total;
-} else {
-  combined = [
-    ...metResult.artworks.map((a) => ({ ...a, source: "Met" })),
-    ...chicagoResult.artworks,
-  ];
-
-  // Only count Chicago results on page 1, to avoid inflating totals
-  total = metResult.total + (page === 1 ? chicagoResult.artworks.length : 0);
-}
-
+        if (categoryParam === "Chicago") {
+          combined = [...chicagoResult.artworks];
+          total = chicagoResult.artworks.length;
+        } else if (categoryParam === "Met") {
+          combined = [...metResult.artworks.map((a) => ({ ...a, source: "Met" }))];
+          total = metResult.total;
+        } else {
+          combined = [
+            ...metResult.artworks.map((a) => ({ ...a, source: "Met" })),
+            ...chicagoResult.artworks,
+          ];
+          total = metResult.total + (page === 1 ? chicagoResult.artworks.length : 0);
+        }
 
         setArtworks(combined);
         setTotalResults(total);
@@ -83,8 +105,6 @@ if (categoryParam === "Chicago") {
     fetchArt();
   }, [search, page, hasImages, tags, geoLocation, date, categoryParam]);
 
-
-  
   const totalPages = Math.ceil(totalResults / itemsPerPage);
 
   return (
@@ -97,7 +117,10 @@ if (categoryParam === "Chicago") {
           <input
             type="text"
             value={search}
-            onChange={(e) => {setSearch(e.target.value); setPage(1);}}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
             placeholder="e.g., Van Gogh"
             className="border border-gray-300 rounded-2xl px-4 py-2 text-sm shadow-sm focus:ring-2 focus:ring-indigo-200 focus:outline-none"
           />
@@ -141,6 +164,7 @@ if (categoryParam === "Chicago") {
               {art.primaryImageSmall ? (
                 <img
                   src={art.primaryImageSmall}
+                    onError={(e) => (e.currentTarget.style.display = 'none')}
                   alt={art.title || "Artwork"}
                   className="w-full mb-2"
                 />

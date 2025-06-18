@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import SkeletonBox from "../components/SkeletonBox";
+import { useState, useEffect } from "react";
 
 const categories = [
 	{
@@ -66,40 +65,46 @@ const categories = [
 	},
 ];
 
-export default function CategoryGrid({loading = false}: {loading?: boolean}) {
+export default function CategoryGrid({onLoaded}: {onLoaded: () => void}) {
 
-	if (loading) {
-		return (
-			<>
-			        <h1 className="text-3xl font-semibold mb-6">Choose a category</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <SkeletonBox key={i} className="h-64 w-full rounded-3xl" />
-          ))}
-        </div>
-			</>
-		)
-	}
+
 	const [showMore, setShowMore] = useState(false);
 
 	const sortedCategories = [...categories].sort((a, b) =>
 		a.name.localeCompare(b.name)
 	);
 
-	const firstThree = sortedCategories.slice(0, 3);
-	const rest = sortedCategories.slice(3);
+	const firstThree = sortedCategories.slice(0, 4);
+	const rest = sortedCategories.slice(4);
+
+useEffect(() => {
+  onLoaded();
+}, []);
 
 	return (
   <>
     <h1 className="text-2xl sm:text-3xl font-semibold mb-6">Choose a category</h1>
     <button
-      onClick={() => setShowMore((prev) => !prev)}
+      onClick={() => {
+		setShowMore((prev) => {
+			const next = !prev;
+			if (!prev && window.innerWidth < 768) {
+				setTimeout(() => {
+					window.scrollBy({
+						top: 550,
+						behavior: "smooth",
+					});
+				}, 100);
+			}
+			return next;
+		});
+	}}
       className="mb-6 px-4 py-2 bg-black text-white rounded-full hover:bg-gray-900 transition"
     >
       {showMore ? "Show Less" : "More Categories"}
     </button>
 
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-5">
+    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-6">
       {firstThree.map((cat) => (
         <Link
           key={cat.query}
@@ -120,7 +125,7 @@ export default function CategoryGrid({loading = false}: {loading?: boolean}) {
     </div>
 
     {showMore && (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6">
         {rest.map((cat) => (
           <Link
             key={cat.query}

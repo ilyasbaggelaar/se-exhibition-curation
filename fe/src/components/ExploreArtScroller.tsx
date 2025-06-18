@@ -3,7 +3,7 @@ import { searchMesArtworks } from "../api/mesuemApi";
 import ArtworkPopUp from "./ArtworkPopUp";
 
 
-export default function ExploreArtScroller() {
+export default function ExploreArtScroller({onLoaded}: {onLoaded: () => void}) {
 
   const [exploreArt, setExploreArt] = useState<any[]>([]);
   const [centerIndex, setCenterIndex] = useState<number>(0);
@@ -16,6 +16,7 @@ export default function ExploreArtScroller() {
 
   useEffect(() => {
     const fetchExploreArt = async () => {
+      try {
       const { artworks } = await searchMesArtworks("art", 1, 30, {
         tags: true,
         hasImages: true,
@@ -23,8 +24,12 @@ export default function ExploreArtScroller() {
 
       const shuffled = artworks.sort(() => 0.5 - Math.random());
       setExploreArt(shuffled.slice(0, 10)); // Limit to 10 items
-    };
-
+    } catch (error) {
+      console.error("failed to load");
+    } finally {
+            onLoaded();
+    }
+  };
     fetchExploreArt();
   }, []);
 

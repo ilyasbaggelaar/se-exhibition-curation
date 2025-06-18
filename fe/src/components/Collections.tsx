@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import ReactPlayer from "react-player";
-import SkeletonBox from "./SkeletonBox";
+import { useEffect } from "react";
 
 
 const collectionsOfMuseums = [
@@ -16,20 +16,13 @@ const collectionsOfMuseums = [
     }
 ]
 
-export default function Collections({loading = false}: {loading: boolean}) {
+export default function Collections({onLoaded}: {onLoaded: () => void}) {
     
-    if (loading) {
-        return (
-                  <div className="flex flex-col items-center">
-        <h2 className="text-2xl font-bold mb-4">Explore Collections</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {Array.from({ length: 2 }).map((_, i) => (
-            <SkeletonBox key={i} className="h-48 w-full rounded-lg" />
-          ))}
-        </div>
-      </div>
-        )
-    }
+
+useEffect(() => {
+  onLoaded()
+}, [])
+
 
  return (
   <div className="flex flex-col items-center w-full">

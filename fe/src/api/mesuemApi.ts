@@ -97,10 +97,7 @@ export const searchChicagoArtworks = async (
 
   const queryString = new URLSearchParams(params).toString();
   const url = `https://api.artic.edu/api/v1/artworks/search?${queryString}`;
-  console.log(url)
   const response = await axios.get(url);
-
-  console.log(response.data.data)
   const rawData = response.data.data;
 
 const filteredData = rawData.filter((item: any) => {
