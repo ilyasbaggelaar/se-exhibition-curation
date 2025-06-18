@@ -58,7 +58,7 @@ npx tsx scripts/seed-db.ts
 
 testUser login information:
 email: testemail123@gmail.com
-Password: test012
+Password: test0123
 
 
 
